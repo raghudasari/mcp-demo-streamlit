@@ -13,7 +13,7 @@ CONFIG = {
         "community-search-tool": {
             "url": "https://api-us-east-1-np.lennar.com/mcp-service-demo/mcp",
             "headers":{
-              "x-api-key": os.environ.get("MCP_COMMUNITY_API_KEY")
+              "x-api-key": st.secrets["MCP_COMMUNITY_API_KEY"]
             }
         }
     }
@@ -23,7 +23,7 @@ CONFIG = {
 
 # Load OpenAI API key from Colab secrets and set environment variable
 #openai_api_key = os.environ['OPENAI_API_KEY']
-#os.environ['OPENAI_API_KEY'] = openai_api_key
+os.environ['OPENAI_API_KEY'] = st.secrets['OPENAI_API_KEY']
 #langsmith_api_key = os.environ['LANGSMITH_API_KEY']
 #os.environ['LANGSMITH_API_KEY'] = langsmith_api_key
 
