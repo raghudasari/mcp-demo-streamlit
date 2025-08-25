@@ -1,0 +1,7 @@
+langchain_openai
+langchain_mcp_adapters
+python-dotenv
+openai
+langchain_community
+mcp-use
+streamlit
