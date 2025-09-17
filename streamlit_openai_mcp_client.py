@@ -13,7 +13,8 @@ CONFIG = {
         "community-search-tool": {
             "url": "https://api-us-east-1-np.lennar.com/mcp-service-demo/mcp",
             "headers":{
-              "x-api-key": st.secrets["MCP_COMMUNITY_API_KEY"]
+              "x-api-key": st.secrets["MCP_COMMUNITY_API_KEY"],
+              "Authorization": f"Bearer {st.secrets["MCP_COMMUNITY_BEARER_TOKEN"]}"
             }
         }
     }
