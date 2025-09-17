@@ -1,5 +1,7 @@
+
 import asyncio
 import os
+import requests
 from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
 from mcp_use import MCPAgent, MCPClient
@@ -8,13 +10,35 @@ from langsmith.wrappers import wrap_openai
 import streamlit as st
 
 load_dotenv()
+
+# Acquire OAuth token
+def get_oauth_token():
+    oauth_url = st.secrets["OAUTH_URL"]
+    client_id = st.secrets["CLIENT_ID"]
+    client_secret = st.secrets["CLIENT_SECRET"]
+    payload = {
+        "client_id": client_id,
+        "client_secret": client_secret,
+        "grant_type": "client_credentials"
+    }
+    headers = {
+        "client_id": client_id,
+        "Content-Type": "application/json"
+    }
+    response = requests.post(oauth_url, json=payload, headers=headers)
+    response.raise_for_status()
+    return response.json()["access_token"]
+
+bearer_token = get_oauth_token()
+
 CONFIG = {
     "mcpServers": {
         "community-search-tool": {
             "url": st.secrets["MCP_COMMUNITY_API_URL"],
-            "headers":{
-              "x-api-key": st.secrets["MCP_COMMUNITY_API_KEY"],
-              "Authorization": f"Bearer {st.secrets["MCP_COMMUNITY_BEARER_TOKEN"]}"
+            "headers": {
+                "client_id": st.secrets["CLIENT_ID"],
+                "Authorization": f"Bearer {bearer_token}",
+                "x-api-key": st.secrets["MCP_COMMUNITY_API_KEY"]
             }
         }
     }
@@ -22,11 +46,10 @@ CONFIG = {
 
 
 
-# Load OpenAI API key from Colab secrets and set environment variable
-#openai_api_key = os.environ['OPENAI_API_KEY']
+
+# Load OpenAI API key from Streamlit secrets
 os.environ['OPENAI_API_KEY'] = st.secrets['OPENAI_API_KEY']
-#langsmith_api_key = os.environ['LANGSMITH_API_KEY']
-#os.environ['LANGSMITH_API_KEY'] = langsmith_api_key
+
 
 # Setup Streamlit page
 st.set_page_config(page_title="MCP Chatbot", layout="wide")
